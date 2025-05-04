@@ -17,4 +17,15 @@ router.post(
   userController.registerUser
 ); // Register a new user
 
+router.post(
+  "/login",
+  [
+    body("email").isEmail().withMessage("Email is required"), // Validate that email is a valid email address
+    body("password")
+      .isLength({ min: 6 })
+      .withMessage("Password must be at least 6 characters long"), // Validate that password is at least 6 characters long
+  ],
+  userController.loginUser
+); // Login a user
+
 module.exports = router;
