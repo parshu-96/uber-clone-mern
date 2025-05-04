@@ -76,3 +76,85 @@ curl -X POST http://localhost:4000/api/v1/user/register \
     "password": "yourpassword"
   }'
 ```
+
+---
+
+## User Login
+
+### Endpoint
+
+`POST /api/v1/user/login`
+
+### Description
+
+Authenticates a user using email and password. Returns a JWT token and the user object on successful login.
+
+### Request Body
+
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "yourpassword"
+}
+```
+
+- `email` (string, required, must be a valid email)
+- `password` (string, required, min 6 chars)
+
+### Responses
+
+#### 200 OK
+
+User logged in successfully.
+
+```json
+{
+  "token": "jwt_token_here",
+  "user": {
+    "_id": "user_id",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "socketId": null
+  }
+}
+```
+
+#### 400 Bad Request
+
+Validation failed.
+
+```json
+{
+  "errors": [
+    {
+      "msg": "Email is required",
+      "param": "email",
+      "location": "body"
+    }
+  ]
+}
+```
+
+#### 401 Unauthorized
+
+Invalid credentials.
+
+```json
+{
+  "error": "Invalid credentials"
+}
+```
+
+### Example cURL
+
+```sh
+curl -X POST http://localhost:4000/api/v1/user/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "john.doe@example.com",
+    "password": "yourpassword"
+  }'
+```
