@@ -158,3 +158,127 @@ curl -X POST http://localhost:4000/api/v1/user/login \
     "password": "yourpassword"
   }'
 ```
+
+---
+
+## Get User Profile
+
+### Endpoint
+
+`GET /api/v1/user/profile`
+
+### Description
+
+Retrieves the profile information for the currently authenticated user. Requires a valid JWT token in the request header.
+
+### Authentication
+
+Requires Bearer token in Authorization header:
+```
+Authorization: Bearer <jwt_token>
+```
+
+### Responses
+
+#### 200 OK
+
+Profile retrieved successfully.
+
+```json
+{
+  "user": {
+    "_id": "user_id",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "socketId": null
+  }
+}
+```
+
+#### 401 Unauthorized
+
+When token is invalid or missing.
+
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+### Example cURL
+
+Using Bearer token:
+```sh
+curl -X GET http://localhost:4000/api/v1/user/profile \
+  -H "Authorization: Bearer your_jwt_token_here"
+```
+
+Using Cookie (cookie is automatically included if you're using the same session):
+```sh
+curl -X GET http://localhost:4000/api/v1/user/profile \
+  --cookie "token=your_jwt_token_here"
+```
+
+---
+
+## Logout User
+
+### Endpoint
+
+`GET /api/v1/user/logout`
+
+### Description
+
+Logs out the currently authenticated user by clearing the auth token cookie and blacklisting the current token.
+
+### Authentication
+
+Token can be provided in one of two ways:
+
+1. As a Bearer token in Authorization header:
+```
+Authorization: Bearer <jwt_token>
+```
+
+2. OR as an HTTP-only cookie named 'token' (automatically set after login)
+
+Note: You only need to provide the token in one of these ways, not both.
+
+### Responses
+
+#### 200 OK
+
+User successfully logged out.
+
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+#### 401 Unauthorized
+
+When token is invalid or missing.
+
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+### Example cURL
+
+Using Bearer token:
+```sh
+curl -X GET http://localhost:4000/api/v1/user/logout \
+  -H "Authorization: Bearer your_jwt_token_here"
+```
+
+Using Cookie (cookie is automatically included if you're using the same session):
+```sh
+curl -X GET http://localhost:4000/api/v1/user/logout \
+  --cookie "token=your_jwt_token_here"
+```
