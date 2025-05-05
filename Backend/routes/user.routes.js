@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router(); // Create a new router instance
 const userController = require("../controllers/user.controller"); // Import the user controller
 const { body } = require("express-validator"); // Import validationResult from express-validator
+const authMiddleware = require("../middlewares/auth.middleware"); // Import the authentication middleware
 
 router.post(
   "/register",
@@ -28,4 +29,7 @@ router.post(
   userController.loginUser
 ); // Login a user
 
+router.get("/profile",authMiddleware.authUser, userController.getUserProfile); // Get user profile
+
+router.get("/logout", authMiddleware.authUser, userController.logoutUser); // Logout a user
 module.exports = router;
