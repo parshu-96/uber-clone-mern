@@ -282,3 +282,123 @@ Using Cookie (cookie is automatically included if you're using the same session)
 curl -X GET http://localhost:4000/api/v1/user/logout \
   --cookie "token=your_jwt_token_here"
 ```
+
+---
+
+## Captain API Documentation
+
+### Register Captain
+
+#### Endpoint
+
+`POST /api/v1/captain/register`
+
+#### Description
+
+Registers a new captain with vehicle details. Returns a JWT token and captain object on successful registration.
+
+#### Request Body
+
+```json
+{
+  "fullName": {
+    "firstName": "John",
+    "lastName": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "password": "yourpassword",
+  "vehicle": {
+    "color": "Black",
+    "plate": "ABC-123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+**Required Fields:**
+- `fullName.firstName` (string, min 3 chars)
+- `fullName.lastName` (string, optional, min 3 chars if provided)
+- `email` (string, unique, valid email format)
+- `password` (string, min 6 chars)
+- `vehicle.color` (string, min 3 chars)
+- `vehicle.plate` (string, min 3 chars)
+- `vehicle.capacity` (number, min 1)
+- `vehicle.vehicleType` (string, enum: ['car', 'motorcycle', 'auto'])
+
+#### Responses
+
+##### 201 Created
+
+Captain successfully registered.
+
+```json
+{
+  "token": "jwt_token_here",
+  "captain": {
+    "_id": "captain_id",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "status": "inactive",
+    "vehicle": {
+      "color": "Black",
+      "plate": "ABC-123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "socketId": null,
+    "location": {
+      "ltd": null,
+      "lng": null
+    }
+  }
+}
+```
+
+##### 400 Bad Request
+
+Validation failed or captain already exists.
+
+```json
+{
+  "errors": [
+    {
+      "msg": "Email is required",
+      "param": "email",
+      "location": "body"
+    }
+  ]
+}
+```
+
+OR
+
+```json
+{
+  "message": "Captain already exist"
+}
+```
+
+#### Example cURL
+
+```sh
+curl -X POST http://localhost:4000/api/v1/captain/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "password": "yourpassword",
+    "vehicle": {
+      "color": "Black",
+      "plate": "ABC-123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }'
+```
