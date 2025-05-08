@@ -5,6 +5,7 @@ const express = require("express");
 const app = express();
 const connectDB = require("./db/db"); // Import the database connection function
 const userRoutes = require("./routes/user.routes"); // Import user routes
+const captainRoutes = require("./routes/captain.routes"); // Import captain routes
 const cookieParser = require("cookie-parser"); // Import cookie-parser for parsing cookies
 connectDB(); // Call the function to connect to the database
 
@@ -17,5 +18,5 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/user", userRoutes); // Use user routes for API version 1
-
+app.use("/api/v1/captain", captainRoutes); // Use captain routes for API version 1
 module.exports = app;
