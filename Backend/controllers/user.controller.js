@@ -30,7 +30,6 @@ module.exports.registerUser = async (req, res, next) => {
 };
 
 module.exports.loginUser = async (req, res, next) => {
-  console.log("Login user controller called"); // Log the request for debugging
   const errors = validationResult(req); // Validate the request body
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() }); // Return validation errors if any
@@ -65,9 +64,9 @@ module.exports.getUserProfile = async (req, res, next) => {
 
 
 module.exports.logoutUser = async (req, res, next) => {
-  res.clearCookie("token"); // Clear the token cookie
   const token = req.cookies.token|| req.headers.authorization.split(" ")[1]; // Get the token from the request headers or cookies
   await blacklistTokenModel.create({ token }); // Blacklist the token
+  res.clearCookie("token"); // Clear the token cookie
   
   res.status(200).json({ message: "Logged out successfully" }); // Return a success message
 }

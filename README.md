@@ -402,3 +402,178 @@ curl -X POST http://localhost:4000/api/v1/captain/register \
     }
   }'
 ```
+
+### Captain Login
+
+#### Endpoint
+
+`POST /api/v1/captain/login`
+
+#### Description
+
+Authenticates a captain using email and password. Returns a JWT token and captain profile on successful login.
+
+#### Request Body
+
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "yourpassword"
+}
+```
+
+**Required Fields:**
+- `email` (string, valid email format)
+- `password` (string, min 6 chars)
+
+#### Responses
+
+##### 200 OK
+
+Captain logged in successfully.
+
+```json
+{
+  "token": "jwt_token_here",
+  "captain": {
+    "_id": "captain_id",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "status": "inactive",
+    "vehicle": {
+      "color": "Black",
+      "plate": "ABC-123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "socketId": null,
+    "location": {
+      "ltd": null,
+      "lng": null
+    }
+  }
+}
+```
+
+##### 400 Bad Request
+
+Invalid credentials or validation failed.
+
+```json
+{
+  "message": "Invalid credentials"
+}
+```
+
+### Get Captain Profile
+
+#### Endpoint
+
+`GET /api/v1/captain/profile`
+
+#### Description
+
+Retrieves the profile information for the currently authenticated captain.
+
+#### Authentication
+
+Token can be provided in one of two ways:
+
+1. As a Bearer token in Authorization header:
+```
+Authorization: Bearer <jwt_token>
+```
+
+2. OR as an HTTP-only cookie named 'token' (automatically set after login)
+
+Note: You only need to provide the token in one of these ways, not both.
+
+#### Responses
+
+##### 200 OK
+
+```json
+{
+  "captain": {
+    "_id": "captain_id",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "status": "inactive",
+    "vehicle": {
+      "color": "Black",
+      "plate": "ABC-123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }
+}
+```
+
+##### 404 Not Found
+
+```json
+{
+  "message": "Captain not found"
+}
+```
+
+### Captain Logout
+
+#### Endpoint
+
+`GET /api/v1/captain/logout`
+
+#### Description
+
+Logs out the currently authenticated captain by clearing the auth token cookie and blacklisting the current token.
+
+#### Authentication
+
+Token can be provided in one of two ways:
+
+1. As a Bearer token in Authorization header:
+```
+Authorization: Bearer <jwt_token>
+```
+
+2. OR as an HTTP-only cookie named 'token' (automatically set after login)
+
+Note: You only need to provide the token in one of these ways, not both.
+
+#### Responses
+
+##### 200 OK
+
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+##### 401 Unauthorized
+
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+#### Example cURL
+
+Using Bearer token:
+```sh
+curl -X GET http://localhost:4000/api/v1/captain/logout \
+  -H "Authorization: Bearer your_jwt_token_here"
+```
+
+Using Cookie:
+```sh
+curl -X GET http://localhost:4000/api/v1/captain/logout \
+  --cookie "token=your_jwt_token_here"
+```
